@@ -152,3 +152,20 @@ El proyecto sigue estrictamente la Norma de 42:
 - ✅ Sin variables globales
 - ✅ Gestión correcta de memoria
 - ✅ Compilación sin warnings con -Wall -Wextra -Werror
+
+---
+
+## 👨‍💻 Autor
+
+- [miguelfdez03](https://github.com/miguelfdez03)
+
+---
+
+
+- LinkedIn: https://www.linkedin.com/in/miguelfdezmunoz
+
+---
+
+Nota: Este repositorio se sube con el propósito de compartir mi progreso y ofrecer un recurso orientativo para aquellos que necesiten ayuda en su aprendizaje. Espero que se utilice como base de estudio y no solo para copiar y pegar soluciones.
+
+<p align="center">🚀 Never stop learning!</p>

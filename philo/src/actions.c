@@ -6,12 +6,16 @@
 /*   By: miguel-f <miguel-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 00:00:00 by miguel-f          #+#    #+#             */
-/*   Updated: 2025/07/21 13:39:53 by miguel-f         ###   ########.fr       */
+/*   Updated: 2025/07/21 17:45:53 by miguel-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * Determina el orden correcto para tomar los tenedores y evitar deadlock
+ * Los filósofos impares toman primero el izquierdo, los pares el derecho
+ */
 static void	take_fork_order(t_philo *philo, pthread_mutex_t **first,
 		pthread_mutex_t **second)
 {
@@ -27,6 +31,21 @@ static void	take_fork_order(t_philo *philo, pthread_mutex_t **first,
 	}
 }
 
+/*
+ * Función: take_forks
+ * ------------------
+ * El filósofo toma ambos tenedores necesarios para comer.
+ * 
+ * 1. Verifica si la simulación ha terminado antes de proceder
+ * 2. Determina el orden correcto para tomar los tenedores (evita deadlock)
+ * 3. Bloquea el primer tenedor e imprime mensaje
+ * 4. Bloquea el segundo tenedor e imprime mensaje
+ * 5. Ahora tiene ambos tenedores y puede proceder a comer
+ * 
+ * philo: Puntero al filósofo que va a tomar los tenedores
+ * 
+ * Retorna: Nada (void)
+ */
 void	take_forks(t_philo *philo)
 {
 	pthread_mutex_t	*first_fork;
@@ -41,6 +60,24 @@ void	take_forks(t_philo *philo)
 	print_action(philo, FORK_MSG, YELLOW);
 }
 
+/*
+ * Función: eat
+ * -----------
+ * El filósofo come y actualiza su estado.
+ * 
+ * 1. Verifica si la simulación ha terminado antes de comer
+ * 2. Si terminó, suelta los tenedores y sale
+ * 3. Imprime el mensaje de que está comiendo
+ * 4. Actualiza de forma thread-safe:
+ *    - El tiempo de la última comida
+ *    - El contador de comidas realizadas
+ * 5. Espera el tiempo necesario para comer
+ * 6. Suelta ambos tenedores al terminar
+ * 
+ * philo: Puntero al filósofo que va a comer
+ * 
+ * Retorna: Nada (void)
+ */
 void	eat(t_philo *philo)
 {
 	if (simulation_ended(philo->data))
@@ -59,6 +96,10 @@ void	eat(t_philo *philo)
 	pthread_mutex_unlock(philo->left_fork);
 }
 
+/**
+ * El filósofo duerme y luego piensa
+ * Incluye tiempo adicional de pensamiento para números impares de filósofos
+ */
 void	sleep_and_think(t_philo *philo)
 {
 	int	think_time;
