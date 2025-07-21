@@ -6,15 +6,27 @@
 /*   By: miguel-f <miguel-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 00:00:00 by miguel-f          #+#    #+#             */
-/*   Updated: 2025/07/21 17:45:53 by miguel-f         ###   ########.fr       */
+/*   Updated: 2025/07/21 17:55:58 by miguel-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/**
- * Determina el orden correcto para tomar los tenedores y evitar deadlock
- * Los filósofos impares toman primero el izquierdo, los pares el derecho
+/*
+ * Función: take_fork_order
+ * -----------------------
+ * Determina el orden correcto para tomar los tenedores y evitar deadlock.
+ * 
+ * 1. Verifica si el filósofo tiene ID impar o par
+ * 2. Los filósofos impares toman primero el tenedor izquierdo, luego el derecho
+ * 3. Los filósofos pares toman primero el tenedor derecho, luego el izquierdo
+ * 4. Esta estrategia evita deadlocks circulares entre filósofos adyacentes
+ * 
+ * philo: Puntero al filósofo que va a tomar los tenedores
+ * first: Puntero donde se guardará la referencia al primer tenedor a tomar
+ * second: Puntero donde se guardará la referencia al segundo tenedor a tomar
+ * 
+ * Retorna: Nada (void), modifica first y second por referencia
  */
 static void	take_fork_order(t_philo *philo, pthread_mutex_t **first,
 		pthread_mutex_t **second)
@@ -96,9 +108,23 @@ void	eat(t_philo *philo)
 	pthread_mutex_unlock(philo->left_fork);
 }
 
-/**
- * El filósofo duerme y luego piensa
- * Incluye tiempo adicional de pensamiento para números impares de filósofos
+/*
+ * Función: sleep_and_think
+ * -----------------------
+ * El filósofo duerme y luego piensa antes del siguiente ciclo.
+ * 
+ * 1. Verifica si la simulación ha terminado antes de proceder
+ * 2. Imprime el mensaje de que está durmiendo
+ * 3. Espera durante el tiempo especificado para dormir
+ * 4. Imprime el mensaje de que está pensando
+ * 5. Si hay número impar de filósofos:
+ *    - Calcula tiempo adicional de pensamiento
+ *    - Esto ayuda a sincronizar mejor la simulación
+ *    - Evita que algunos filósofos monopolicen los tenedores
+ * 
+ * philo: Puntero al filósofo que va a dormir y pensar
+ * 
+ * Retorna: Nada (void)
  */
 void	sleep_and_think(t_philo *philo)
 {
